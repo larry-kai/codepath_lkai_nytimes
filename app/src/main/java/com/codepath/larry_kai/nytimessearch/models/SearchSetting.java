@@ -8,7 +8,6 @@ import java.util.Calendar;
  */
 public class SearchSetting implements Serializable {
 
-    // XLKAI
     public static final String FORMAT_YYYYMMDD = "yyyyMMdd"; //"YYYYMMDD";
     public static final String FORMAT_MONTH_DAY_YEAR = "MM/dd/yyyy";
 
@@ -25,12 +24,6 @@ public class SearchSetting implements Serializable {
     String sortOrder = SORT_ORDER_DEFAULT;
     String topic = NEWS_DESK_DEFAULT;
 
-    public void clear() {
-        beginDateTimestamp = null;
-        sortOrder = SORT_ORDER_DEFAULT;
-        topic = NEWS_DESK_DEFAULT;
-    }
-
     public String getBeginDate(String format) {
         CharSequence str = "";
         if (beginDateTimestamp != null) {
@@ -45,16 +38,11 @@ public class SearchSetting implements Serializable {
         beginDateTimestamp = calendar.getTime().getTime();
     }
 
-    public void setBeginDateTimestamp(Long timestamp) {
-        if (timestamp > 0) {
-            beginDateTimestamp = timestamp;
-        } else {
-            beginDateTimestamp = null;
-        }
-    }
-
     public String getSortOrder() {
-        return sortOrder;
+        if (sortOrder.equals(SORT_ORDER_NEWEST) || sortOrder.equals(SORT_ORDER_OLDEST)) {
+            return sortOrder;
+        }
+        return null;
     }
 
     public void setSortOrder(String newSortOrder) {
@@ -71,7 +59,10 @@ public class SearchSetting implements Serializable {
     }
 
     public String getTopic() {
-        return topic;
+        if (topic.equals(NEWS_DESK_ARTS) || topic.equals(NEWS_DESK_FASHION_AND_STYLE) || topic.equals(NEWS_DESK_SPORTS)) {
+            return topic;
+        }
+        return null;
     }
 
     public void setTopics(String newTopic) {

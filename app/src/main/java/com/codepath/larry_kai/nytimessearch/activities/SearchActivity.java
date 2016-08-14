@@ -6,6 +6,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,6 +43,7 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setting = new SearchSetting();
         setContentView(R.layout.activity_search);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -122,6 +124,23 @@ public class SearchActivity extends AppCompatActivity {
         params.put("page", 0);
         params.put("q", query);
 
+        String beginDateFormatted = setting.getBeginDate(SearchSetting.FORMAT_YYYYMMDD);
+        if (!TextUtils.isEmpty(beginDateFormatted)) {
+            params.put("begin_date", beginDateFormatted);
+        }
+
+        String order = setting.getSortOrder();
+        if (!TextUtils.isEmpty(order)) {
+            params.put("sort", order);
+        }
+
+        String topic = setting.getTopic();
+        if (!TextUtils.isEmpty(topic)) {
+            params.put("fq", "news_desk:(\"" + topic + "\")");
+        }
+
+        Log.d("DEBUG", ">>>>>>" + params.toString());
+
         client.get(url, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -129,6 +148,7 @@ public class SearchActivity extends AppCompatActivity {
                 JSONArray articleJsonResults = null;
                 try {
                     articleJsonResults = response.getJSONObject("response").getJSONArray("docs");
+                    adapter.clear();
                     adapter.addAll(Article.fromJSONArray(articleJsonResults));
                     Log.d("DEBUG", articles.toString());
                 } catch (JSONException e) {
