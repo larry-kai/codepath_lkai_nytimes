@@ -31,8 +31,6 @@ import cz.msebera.android.httpclient.Header;
 
 public class SearchActivity extends AppCompatActivity {
 
-    // XLKAI Toast.makeText(getApplicationContext(), query, Toast.LENGTH_SHORT).show();
-
     GridView gvResults;
 
     ArrayList<Article> articles;

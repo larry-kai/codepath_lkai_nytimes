@@ -25,6 +25,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/tvBeginDate"
+        android:layout_alignTop="@+id/tvDate"
+        android:layout_toRightOf="@+id/tvDate"
+        android:layout_toEndOf="@+id/tvDate"
+        android:hint="@string/begin_date_hint"
+        android:onClick="onClickBeginDate" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/sort_order"
         android:id="@+id/tvOrder"
         android:layout_margin="20dp"

@@ -1,6 +1,7 @@
 package com.codepath.larry_kai.nytimessearch.models;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
 /**
  * Created by larry_kai on 8/14/16.
@@ -36,6 +37,12 @@ public class SearchSetting implements Serializable {
             str = android.text.format.DateFormat.format(format, beginDateTimestamp);
         }
         return str.toString();
+    }
+
+    public void setBeginDate(int year, int monthOfYear, int dayOfMonth) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, monthOfYear, dayOfMonth);
+        beginDateTimestamp = calendar.getTime().getTime();
     }
 
     public void setBeginDateTimestamp(Long timestamp) {
