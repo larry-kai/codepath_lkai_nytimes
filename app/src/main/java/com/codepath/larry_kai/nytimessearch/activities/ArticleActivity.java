@@ -6,7 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.codepath.larry_kai.nytimessearch.Article;
+import com.codepath.larry_kai.nytimessearch.models.Article;
 import com.codepath.larry_kai.nytimessearch.R;
 
 public class ArticleActivity extends AppCompatActivity {

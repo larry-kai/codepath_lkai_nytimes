@@ -1,4 +1,4 @@
-package com.codepath.larry_kai.nytimessearch;
+package com.codepath.larry_kai.nytimessearch.models;
 
 import org.json.JSONArray;
 import org.json.JSONException;

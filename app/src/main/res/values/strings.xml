@@ -4,4 +4,23 @@
     <string name="hint">Enter search query</string>
     <string name="search">Search</string>
     <string name="title_activity_article">ArticleActivity</string>
+    <string name="begin_date">Begin Date</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="title_setting">Filter Search Results</string>
+    <string name="sort_order">Sort Order</string>
+    <string name="news_desk_topics">News Desk Topics</string>string>
+
+    <string-array name="sort_order_options">
+        <item>Default</item>
+        <item>Newest</item>
+        <item>Oldest</item>
+    </string-array>
+
+    <string-array name="topics_options">
+        <item>Default</item>
+        <item>Arts</item>
+        <item>Fashion &amp; Style</item>
+        <item>Sports</item>
+    </string-array>
 </resources>

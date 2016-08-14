@@ -13,9 +13,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.codepath.larry_kai.nytimessearch.Article;
-import com.codepath.larry_kai.nytimessearch.ArticleArrayAdapter;
 import com.codepath.larry_kai.nytimessearch.R;
+import com.codepath.larry_kai.nytimessearch.adapters.ArticleArrayAdapter;
+import com.codepath.larry_kai.nytimessearch.models.Article;
+import com.codepath.larry_kai.nytimessearch.models.SearchSetting;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -36,6 +37,9 @@ public class SearchActivity extends AppCompatActivity {
 
     ArrayList<Article> articles;
     ArticleArrayAdapter adapter;
+    SearchSetting setting;
+
+    private final int REQUEST_SETTING = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,11 +100,20 @@ public class SearchActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_search || id == R.id.action_settings) {
+        if (id == R.id.action_settings) {
+            Intent i = new Intent(getApplicationContext(), SettingActivity.class);
+            startActivityForResult(i, REQUEST_SETTING);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == REQUEST_SETTING) {
+            setting = (SearchSetting) data.getSerializableExtra("setting");
+        }
     }
 
     private void handleArticleSearch(String query) {
