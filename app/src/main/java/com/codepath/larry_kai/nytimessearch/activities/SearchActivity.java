@@ -25,6 +25,7 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -112,7 +113,7 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_SETTING) {
-            setting = (SearchSetting) data.getSerializableExtra("setting");
+            setting = Parcels.unwrap(data.getParcelableExtra("setting"));
         }
     }
 

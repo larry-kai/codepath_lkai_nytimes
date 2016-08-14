@@ -1,12 +1,14 @@
 package com.codepath.larry_kai.nytimessearch.models;
 
-import java.io.Serializable;
+import org.parceler.Parcel;
+
 import java.util.Calendar;
 
 /**
  * Created by larry_kai on 8/14/16.
  */
-public class SearchSetting implements Serializable {
+@Parcel
+public class SearchSetting {
 
     public static final String FORMAT_YYYYMMDD = "yyyyMMdd"; //"YYYYMMDD";
     public static final String FORMAT_MONTH_DAY_YEAR = "MM/dd/yyyy";
@@ -23,6 +25,9 @@ public class SearchSetting implements Serializable {
     Long beginDateTimestamp = null;
     String sortOrder = SORT_ORDER_DEFAULT;
     String topic = NEWS_DESK_DEFAULT;
+
+    public SearchSetting() {
+    }
 
     public String getBeginDate(String format) {
         CharSequence str = "";

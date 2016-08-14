@@ -14,6 +14,8 @@ import com.codepath.larry_kai.nytimessearch.R;
 import com.codepath.larry_kai.nytimessearch.fragments.DatePickerFragment;
 import com.codepath.larry_kai.nytimessearch.models.SearchSetting;
 
+import org.parceler.Parcels;
+
 public class SettingActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private SearchSetting setting = new SearchSetting();
@@ -62,7 +64,7 @@ public class SettingActivity extends AppCompatActivity implements DatePickerDial
 
     public void onClickSave(View view) {
         Intent data = new Intent();
-        data.putExtra("setting", setting);
+        data.putExtra("setting", Parcels.wrap(setting));
         setResult(RESULT_OK, data);
         this.finish();
     }
