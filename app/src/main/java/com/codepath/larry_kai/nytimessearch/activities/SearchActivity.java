@@ -16,6 +16,7 @@ import android.widget.GridView;
 
 import com.codepath.larry_kai.nytimessearch.R;
 import com.codepath.larry_kai.nytimessearch.adapters.ArticleArrayAdapter;
+import com.codepath.larry_kai.nytimessearch.listeners.EndlessScrollListener;
 import com.codepath.larry_kai.nytimessearch.models.Article;
 import com.codepath.larry_kai.nytimessearch.models.SearchSetting;
 import com.loopj.android.http.AsyncHttpClient;
@@ -33,8 +34,11 @@ import cz.msebera.android.httpclient.Header;
 
 public class SearchActivity extends AppCompatActivity {
 
+    public static final String NYT_SEARCH_URL = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+
     GridView gvResults;
 
+    String searchQuery;
     ArrayList<Article> articles;
     ArticleArrayAdapter adapter;
     SearchSetting setting;
@@ -67,6 +71,14 @@ public class SearchActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        gvResults.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public boolean onLoadMore(int page, int totalItemsCount) {
+                loadMoreArticles(page);
+                return true; // XLKAI
+            }
+        });
     }
 
     @Override
@@ -80,8 +92,24 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
+                searchQuery = query;
                 searchView.clearFocus();
-                handleArticleSearch(query);
+                int page = 0;
+
+                AsyncHttpClient client = new AsyncHttpClient();
+                client.get(NYT_SEARCH_URL, getSearchQueryParams(page), new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        JSONArray articleJsonResults = null;
+                        try {
+                            articleJsonResults = response.getJSONObject("response").getJSONArray("docs");
+                            adapter.clear();
+                            adapter.addAll(Article.fromJSONArray(articleJsonResults));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
                 return true;
             }
 
@@ -91,6 +119,23 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
         return super.onCreateOptionsMenu(menu);
+    }
+
+
+    private void loadMoreArticles(int page) {
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get(NYT_SEARCH_URL, getSearchQueryParams(page), new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                JSONArray articleJsonResults = null;
+                try {
+                    articleJsonResults = response.getJSONObject("response").getJSONArray("docs");
+                    adapter.addAll(Article.fromJSONArray(articleJsonResults));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
@@ -117,13 +162,11 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
-    private void handleArticleSearch(String query) {
-        AsyncHttpClient client = new AsyncHttpClient();
-        String url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+    private RequestParams getSearchQueryParams(int page) {
         RequestParams params = new RequestParams();
         params.put("api-key", "ffc8f9a7e84e4cdbacc421df6994dd52");
-        params.put("page", 0);
-        params.put("q", query);
+        params.put("page", page);
+        params.put("q", searchQuery);
 
         String beginDateFormatted = setting.getBeginDate(SearchSetting.FORMAT_YYYYMMDD);
         if (!TextUtils.isEmpty(beginDateFormatted)) {
@@ -141,21 +184,6 @@ public class SearchActivity extends AppCompatActivity {
         }
 
         Log.d("DEBUG", ">>>>>>" + params.toString());
-
-        client.get(url, params, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Log.d("DEBUG", response.toString());
-                JSONArray articleJsonResults = null;
-                try {
-                    articleJsonResults = response.getJSONObject("response").getJSONArray("docs");
-                    adapter.clear();
-                    adapter.addAll(Article.fromJSONArray(articleJsonResults));
-                    Log.d("DEBUG", articles.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        return params;
     }
 }
